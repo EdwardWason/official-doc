@@ -224,11 +224,5 @@ Welcome to submit Issues and Pull Requests!
 
 ---
 
-## 📞 Contact
-
-- **GitHub**: [https://github.com/EdwardWason/official-doc](https://github.com/EdwardWason/official-doc)
-- **Issues**: [https://github.com/EdwardWason/official-doc/issues](https://github.com/EdwardWason/official-doc/issues)
-
----
 
 *Built with ❤️ for LLM + AI Agent Ecosystem*
