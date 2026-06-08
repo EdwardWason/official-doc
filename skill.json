@@ -1,5 +1,5 @@
 {
-  "name": "official-doc",
+  "name": "gongwen-formatter",
   "name_cn": "公文格式转换",
   "version": "1.1.0",
   "description": "将 Markdown 文档转换为符合 GB/T 9704-2012 党政机关公文格式的 Word 文档",
@@ -13,7 +13,7 @@
   "dependencies": ["python-docx>=1.1.0", "markdown-it-py>=3.0.0"],
 
   "skills": {
-    "name": "official-doc",
+    "name": "gongwen-formatter",
     "type": "formatter",
     "category": "文档处理"
   },
