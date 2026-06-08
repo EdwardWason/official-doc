@@ -2,7 +2,7 @@
 
 🇨🇳 [中文文档](README_CN.md) | 🇺🇸 English
 
-Convert Markdown documents to Chinese government official document format (GB/T 9704-2012) Word documents.
+Convert Markdown documents to Chinese government official document format (GB/T 9704-2012) Word documents. Focused on formatting conversion only — does not add red header, record mark, signature block, or other decorative elements of official documents.
 
 ---
 
@@ -25,6 +25,16 @@ This tool only provides formatting functionality and does not review content. Pl
 
 ---
 
+## 🆕 v1.1.0 New Features
+
+- Introduced **markdown-it-py** parser, supporting multi-line paragraphs and nested lists
+- Smart `#` heading detection: a single `#` is treated as a main title (centered, no numbering); multiple `#` headings are treated as first-level headings (with numbering)
+- First line indent precisely aligned with national standard (640 twips = width of 2 Size-3 Chinese characters)
+- Added support for **tables, images, hyperlinks, code blocks, and nested lists**
+- **Bold text** is automatically converted to SimHei (黑体); *italic text* is automatically converted to KaiTi (楷体)
+
+---
+
 ## 🚀 Quick Start
 
 ### System Requirements
@@ -32,14 +42,14 @@ This tool only provides formatting functionality and does not review content. Pl
 | Component | Requirement |
 |-----------|-------------|
 | OS | Windows 10/11, Linux, macOS |
-| Python | 3.8+ |
-| Dependency | python-docx >= 1.1.0 |
+| Python | 3.8+ (3.11 / 3.12 / 3.13 supported) |
+| Dependency | python-docx >= 1.1.0, markdown-it-py >= 3.0.0 |
 
 ### Installation
 
 **Method 1: Using pip**
 ```bash
-pip install python-docx>=1.1.0
+pip install python-docx>=1.1.0 markdown-it-py>=3.0.0
 ```
 
 **Method 2: Clone repository**
@@ -92,27 +102,43 @@ print("Conversion successful" if success else "Conversion failed")
 | Left Margin | 2.8cm |
 | Right Margin | 2.6cm |
 | Line Spacing | 26pt (fixed) |
-| First Line Indent | 3 characters |
+| First Line Indent | 2 characters (640 twips) |
 
 ### Font Settings
 
-| Element | Markdown | Font | Size | Bold |
-|---------|----------|------|------|------|
-| Title | `#` | Fangzheng Xiaobiao Song | 2nd | ❌ |
-| Heading 1 | `##` | Hei Ti | 3rd | ❌ |
-| Heading 2 | `###` | Kai Ti_GB2312 | 3rd | ✅ |
-| Heading 3 | `####` | Fang Song_GB2312 | 3rd | ✅ |
-| Body | Normal | Fang Song_GB2312 | 3rd | ❌ |
-| Page Number | - | Song Ti | 4th | ❌ |
+| Element | Markdown | Font | Size |
+|---------|----------|------|------|
+| Title | `#` (single) | Fangzheng Xiaobiao Song | 2nd |
+| Heading 1 | `##` / `#` (multiple) | Hei Ti | 3rd |
+| Heading 2 | `###` | Kai Ti_GB2312 | 3rd |
+| Heading 3 | `####` | Fang Song_GB2312 | 3rd |
+| Body | Normal | Fang Song_GB2312 | 3rd |
+| Page Number | - | Song Ti | 4th |
 
 ### Heading Numbering Rules
 
-| Level | Format Example |
-|-------|---------------|
-| Title | I. Document Title |
-| Heading 1 | I. Section Name |
-| Heading 2 | (I) Subsection Name |
-| Heading 3 | 1. Item Name |
+| Level | Condition | Format Example |
+|-------|-----------|---------------|
+| Title | Single `#` in document | Document Title (centered, no numbering) |
+| Heading 1 | `##` or multiple `#` | I. Section Name |
+| Heading 2 | `###` | (I) Subsection Name |
+| Heading 3 | `####` | 1. Item Name |
+
+### Supported Markdown Elements
+
+| Element | Markdown Syntax | Notes |
+|---------|----------------|-------|
+| Heading | `#` `##` `###` `####` | Smart title detection |
+| Paragraph | Plain text | Multi-line paragraph support |
+| Ordered List | `1. 2. 3.` | Nested list support |
+| Unordered List | `- - -` | Nested list support |
+| Table | `\| col \| col \|` | Full table support |
+| Image | `![alt](url)` | Inline image |
+| Link | `[text](url)` | Hyperlink |
+| Bold | `**text**` | Auto-convert to Hei Ti |
+| Italic | `*text*` | Auto-convert to Kai Ti |
+| Code Block | `` ```code``` `` | Monospace formatting |
+| Horizontal Rule | `---` | Page separator |
 
 ---
 
@@ -127,13 +153,13 @@ from openclaw import Skill
 class OfficialDocSkill(Skill):
     name = "official-doc"
     description = "Convert Markdown to Chinese government official document format"
-    
+
     def execute(self, md_content, output_path=None):
         if output_path is None:
             output_path = "output.docx"
-        
+
         success = md_to_docx(md_content, output_path)
-        
+
         return {
             "success": success,
             "output_path": output_path,
