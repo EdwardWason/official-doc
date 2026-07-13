@@ -1,3 +1,17 @@
+---
+slug: gongwen-formatter
+name: gongwen-formatter
+displayName: Gongwen Formatter
+name_cn: 公文格式转换
+version: 1.1.1
+author: EdwardWason
+license: MIT
+homepage: https://github.com/EdwardWason/official-doc
+triggers:
+  - 公文格式转换
+  - 转换公文格式
+---
+
 # 📄 official-doc - 公文格式转换
 
 ## 技能信息
@@ -7,7 +21,7 @@
 |------|------|
 | **名称** | official-doc |
 | **中文名称** | 公文格式转换 |
-| **版本** | 1.1.0 |
+| **版本** | 1.1.1 |
 | **作者** | EdwardWason |
 | **许可证** | MIT |
 | **主页** | https://github.com/EdwardWason/official-doc |
