@@ -8,6 +8,7 @@
   "license": "MIT",
   "homepage": "https://github.com/EdwardWason/official-doc",
   "tags": ["document", "formatter", "markdown", "word", "government", "chinese", "gb9704"],
+  "triggers": ["公文格式转换", "转换公文格式"],
   "platform": ["windows", "linux", "macos"],
   "python_version": ">=3.8",
   "dependencies": ["python-docx>=1.1.0", "markdown-it-py>=3.0.0"],
