@@ -10,6 +10,19 @@ Convert Markdown documents to Chinese government official document format (GB/T 
 
 This tool only provides formatting functionality and does not review content. Please ensure that the official documents generated using this tool comply with relevant regulations and requirements.
 
+### Network Access Disclosure for Image Download
+
+- When the Markdown contains remote images via `![alt](http/https URL)`, this tool will **automatically issue outbound network requests** to download and embed them into the Word document.
+- Only `http://`, `https://`, and `data:image` schemes are allowed; other schemes (e.g., `file://`, `ftp://`) are silently skipped to prevent SSRF.
+- **Privacy & Compliance Notice**: In restricted network environments (intranet, classified networks, air-gapped systems), disable remote image download by passing `download_images=False`:
+
+```python
+md_to_docx(md_content, output_path, download_images=False)
+# When disabled, remote images are replaced with a [Image: alt] text placeholder, with no network requests made.
+```
+
+- For untrusted Markdown sources, review image URLs beforehand to avoid leaking network metadata to attacker-controlled endpoints.
+
 ---
 
 ## ✨ Features

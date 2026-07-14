@@ -10,6 +10,19 @@
 
 本工具仅提供格式排版功能，不负责内容审核。请确保使用本工具生成的公文内容符合相关规定和要求。
 
+### 关于图片下载的网络请求说明
+
+- 当 Markdown 中包含 `![alt](http/https URL)` 远程图片时，本工具会**自动发起网络请求**下载并嵌入到 Word 文档中。
+- 仅允许 `http://`、`https://` 和 `data:image` 协议；其他 scheme（如 `file://`、`ftp://`）会被静默跳过，防止 SSRF。
+- **隐私与合规提示**：在受限网络环境（内网、保密网络、隔离环境）中使用时，建议通过 `download_images=False` 参数关闭远程图片下载：
+
+```python
+md_to_docx(md_content, output_path, download_images=False)
+# 关闭后，远程图片将以 [图片: alt] 文字占位替代，不发起任何网络请求
+```
+
+- 对不可信来源的 Markdown 文档，请先审阅图片 URL，避免向攻击者控制的端点泄露网络元数据。
+
 ---
 
 ## ✨ 功能特点

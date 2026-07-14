@@ -23,7 +23,10 @@ import tempfile
 import urllib.request
 import urllib.error
 
-__version__ = "1.1.0"
+__version__ = "1.1.2"
+
+# 允许的 URL scheme 白名单（防止 SSRF）
+ALLOWED_URL_SCHEMES = ('http://', 'https://', 'data:image')
 
 # ── 国标常量 ──
 FIRST_LINE_INDENT_TWIPS = 640  # 首行缩进 640 twips = 2个三号汉字宽度
@@ -124,8 +127,14 @@ def add_page_number(doc):
 
 
 def download_image(url, timeout=10):
-    """下载图片到临时文件，返回本地路径；失败返回 None"""
+    """下载图片到临时文件，返回本地路径；失败返回 None。
+    仅允许 http/https/data:image scheme，防止 SSRF。
+    """
     try:
+        # URL scheme 白名单校验
+        if not url.lower().startswith(ALLOWED_URL_SCHEMES):
+            return None
+
         if url.startswith('data:image'):
             # base64 内嵌图片
             match = re.match(r'data:image/(\w+);base64,(.*)', url)
@@ -270,13 +279,16 @@ def render_inline_with_formatting(paragraph, tokens, font_name='仿宋_GB2312', 
 #  核心转换引擎
 # ══════════════════════════════════════════════════════════════
 
-def md_to_docx(md_content, output_path):
+def md_to_docx(md_content, output_path, download_images=True):
     """
     将 Markdown 内容转换为符合 GB/T 9704-2012 标准的 Word 文档
 
     参数:
         md_content (str): Markdown 格式的文本内容
         output_path (str): 输出 Word 文件路径（.docx）
+        download_images (bool): 是否下载远程图片并嵌入Word。
+            True（默认）：下载 http/https 图片并嵌入
+            False：跳过图片下载，用文字替代 [图片: alt]
 
     返回:
         bool: 转换是否成功
@@ -387,7 +399,7 @@ def md_to_docx(md_content, output_path):
                         img_token = children[0]
                         img_url = img_token.attrGet('src') or ''
                         img_alt = img_token.attrGet('alt') or ''
-                        _handle_standalone_image(doc, img_url, img_alt)
+                        _handle_standalone_image(doc, img_url, img_alt, download_images)
                     else:
                         paragraph = doc.add_paragraph()
                         paragraph.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
@@ -594,8 +606,19 @@ def _collect_table(tokens, start_idx):
 #  独立图片段落处理（在主循环外补充）
 # ══════════════════════════════════════════════════════════════
 
-def _handle_standalone_image(doc, url, alt_text=''):
-    """处理独立图片段落：下载图片并嵌入 Word，居中显示"""
+def _handle_standalone_image(doc, url, alt_text='', download_images=True):
+    """处理独立图片段落：下载图片并嵌入 Word，居中显示。
+    download_images=False 时跳过网络请求，用文字替代。
+    """
+    if not download_images:
+        # 跳过图片下载，用文字替代
+        paragraph = doc.add_paragraph()
+        paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        set_line_spacing(paragraph)
+        run = paragraph.add_run(f'[图片: {alt_text or url}]')
+        set_font(run, '仿宋_GB2312', 16)
+        return
+
     local_path = download_image(url)
     if local_path and os.path.exists(local_path):
         try:

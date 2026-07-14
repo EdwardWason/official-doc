@@ -45,5 +45,9 @@ Desktop.ini
 output/
 test_output.docx
 
+# Temp test scripts (safety audit verification)
+_test_*.py
+_test_*.ps1
+
 # Logs
 *.log
