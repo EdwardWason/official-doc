@@ -3,12 +3,15 @@ slug: gongwen-formatter
 name: gongwen-formatter
 displayName: Gongwen Formatter
 name_cn: 公文格式转换
-version: 1.1.2
+version: 1.1.3
 author: EdwardWason
 license: MIT
 homepage: https://github.com/EdwardWason/official-doc
 description: 公文格式转换 — 将 Markdown 转换为符合 GB/T 9704-2012 党政机关公文格式的 Word 文件。可选能力：远程图片下载（仅 http/https/data:image，可通过 download_images=False 关闭）。Do NOT：不做文体识别、不添加红头/版记/落款、不做内容审核。
 summary: 将 Markdown 转换为符合 GB/T 9704-2012 标准的党政机关公文格式 Word 文件。
+allowed-tools:
+  - filesystem (write .docx output)
+  - net.http (GET image download, http/https only, toggleable via download_images=False)
 triggers:
   - 公文格式转换
   - 转换公文格式
@@ -23,7 +26,7 @@ triggers:
 |------|------|
 | **名称** | official-doc |
 | **中文名称** | 公文格式转换 |
-| **版本** | 1.1.2 |
+| **版本** | 1.1.3 |
 | **作者** | EdwardWason |
 | **许可证** | MIT |
 | **主页** | https://github.com/EdwardWason/official-doc |
@@ -61,6 +64,11 @@ triggers:
 - `_handle_standalone_image()` 关闭图片下载时以 `[图片: alt]` 文字占位替代
 - `requirements.txt` 改用 `~=` 兼容版本锁定（python-docx~=1.1.0、markdown-it-py~=3.0.0）
 - README 中英文版增加 "图片下载网络请求说明 / Network Access Disclosure" 用户警告段落
+
+### v1.1.3 修复（响应 v1.1.2 后 SkillSpector 二次审计）
+- 修复 v1.1.2 漏改：README/skill.md/skill.json 中残留的 `>=` 全部改为 `~=`（依赖版本一致性）
+- frontmatter 增加 `allowed-tools` 字段，声明 filesystem（写 .docx）和 net.http（图片下载，可关闭）两项权限
+- 7 项 findings 中：2 项真实漏改（本次修复）、3 项 stale（已修复但被重复扫描，本次通过 allowed-tools 增强声明）、2 项过度修改（保留现有设计，不采纳）
 
 ---
 
@@ -242,8 +250,8 @@ schedule.every().monday.at("09:00").do(generate_report)
 | 依赖 | 版本 |
 |------|------|
 | Python | >= 3.8 |
-| python-docx | >= 1.1.0 |
-| markdown-it-py | >= 3.0.0 |
+| python-docx | ~= 1.1.0 |
+| markdown-it-py | ~= 3.0.0 |
 
 ---
 

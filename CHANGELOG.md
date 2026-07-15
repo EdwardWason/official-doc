@@ -5,6 +5,28 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [1.1.3] - 2026-07-14
+
+### 修复（响应 v1.1.2 后 SkillSpector 二次审计 7 findings）
+
+#### Fixed
+- 修复 v1.1.2 漏改：README.md / README_CN.md / skill.md / skill.json 中残留的 `>=` 全部改为 `~=`（依赖版本一致性）
+  - 根因：v1.1.2 只改了 requirements.txt 和 setup.py，漏改了 README 安装示例、skill.md 依赖表、skill.json dependencies 字段
+  - SkillSpector 扫描所有文件，因此仍报告 `>=` 为 Unpinned Dependencies
+
+#### Added
+- frontmatter 增加 `allowed-tools` 字段，声明 filesystem（写 .docx）和 net.http（图片下载，可关闭）两项权限
+  - 目的：让 ClawHub SkillSpector 能从 frontmatter 识别权限声明，减少 MCP Least Privilege finding
+
+#### SkillSpector v1.1.2 二次审计 7 findings 评估
+| Finding | 评估 | 处理 |
+|---------|------|------|
+| MCP Least Privilege (Medium) | stale — 权限声明已在 v1.1.2 添加 | 本次通过 allowed-tools 增强声明 |
+| Description-Behavior Mismatch (Medium) | 过度修改 — 图片下载是合理功能 | 不采纳，保留现有设计 |
+| Context-Inappropriate Capability (Medium) | 过度修改 — 已有白名单+开关 | 不采纳，保留现有设计 |
+| Missing User Warnings × 2 (Medium) | stale — README 警告已添加 | 等 ClawHub 缓存刷新 |
+| Unpinned Dependencies × 2 (Low) | 真实漏改 — 残留 `>=` | 本次修复 |
+
 ## [1.1.2] - 2026-07-14
 
 ### 安全升级（响应 ClawHub SkillSpector 审计）

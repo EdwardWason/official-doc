@@ -56,13 +56,13 @@ md_to_docx(md_content, output_path, download_images=False)
 |-----------|-------------|
 | OS | Windows 10/11, Linux, macOS |
 | Python | 3.8+ (3.11 / 3.12 / 3.13 supported) |
-| Dependency | python-docx >= 1.1.0, markdown-it-py >= 3.0.0 |
+| Dependency | python-docx ~= 1.1.0, markdown-it-py ~= 3.0.0 |
 
 ### Installation
 
 **Method 1: Using pip**
 ```bash
-pip install python-docx>=1.1.0 markdown-it-py>=3.0.0
+pip install "python-docx~=1.1.0" "markdown-it-py~=3.0.0"
 ```
 
 **Method 2: Clone repository**

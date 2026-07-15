@@ -56,13 +56,13 @@ md_to_docx(md_content, output_path, download_images=False)
 |------|------|
 | 操作系统 | Windows 10/11、Linux、macOS |
 | Python | 3.8+（支持 3.11 / 3.12 / 3.13） |
-| 依赖 | python-docx >= 1.1.0, markdown-it-py >= 3.0.0 |
+| 依赖 | python-docx ~= 1.1.0, markdown-it-py ~= 3.0.0 |
 
 ### 安装方法
 
 **方式一：使用 pip 安装**
 ```bash
-pip install python-docx>=1.1.0 markdown-it-py>=3.0.0
+pip install "python-docx~=1.1.0" "markdown-it-py~=3.0.0"
 ```
 
 **方式二：克隆仓库**

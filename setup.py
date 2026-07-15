@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='official-doc',
-    version='1.1.2',
+    version='1.1.3',
     description='公文格式转换 - 将 Markdown 转为党政机关公文格式',
     long_description=open('README.md', 'r', encoding='utf-8').read(),
     long_description_content_type='text/markdown',

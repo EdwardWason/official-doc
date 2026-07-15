@@ -23,7 +23,7 @@ import tempfile
 import urllib.request
 import urllib.error
 
-__version__ = "1.1.2"
+__version__ = "1.1.3"
 
 # 允许的 URL scheme 白名单（防止 SSRF）
 ALLOWED_URL_SCHEMES = ('http://', 'https://', 'data:image')
